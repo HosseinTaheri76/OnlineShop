@@ -1,0 +1,27 @@
+<!doctype html>
+<html class="no-js" lang="Fa_IR" dir="rtl">
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}{% endblock %}</title>
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta property="og:title" content="">
+        <meta property="og:type" content="">
+        <meta property="og:url" content="">
+        <meta property="og:image" content="">
+
+        <!-- todo: read favicon from database -->
+        <link rel="apple-touch-icon" href="icon.png">
+        <!-- Place favicon.ico in the root directory -->
+        {% include 'shared/_head_links.html' %}
+        {% block extra_styles %}{% endblock %}
+        <meta name="theme-color" content="#f4f5f9">
+
+    </head>
+    <body>
+        {% block body_content %}{% endblock %}
+        {% include 'shared/_body_scripts.html' %}
+        {% block extra_scripts %}{% endblock %}
+    </body>
+</html>

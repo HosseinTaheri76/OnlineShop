@@ -1,0 +1,19 @@
+{% extends 'shared/_base.html' %}
+{% block title %}{% endblock %}
+{% block extra_styles %}{% endblock %}
+{% block body_content %}
+    {% include 'shared/_header.html' %}
+    {% include 'shared/_breadcrumb.html' %}
+    {% block content %}{% endblock %}
+    {% include 'shared/_footer.html' %}
+    {% include 'shared/cart_canvas.html' %}
+    <div class="float-btn">
+        <div class="container-fluid">
+            <!-- contact us floating -->
+            <div id="btncollapzion" class=" btn_collapzion"></div>
+            <div class="" id="contactOverlay"></div>
+            <!-- end contact us floating -->
+        </div>
+    </div>
+{% endblock %}
+{% block extra_scripts %}{% endblock %}

@@ -35,6 +35,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # local apps,
+    'accounts.apps.AccountsConfig',
+    'pages.apps.PagesConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -120,3 +125,6 @@ STATICFILES_DIRS = [BASE_DIR / "assets", ]
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Auth user settings
+AUTH_USER_MODEL = 'accounts.CustomUser'
