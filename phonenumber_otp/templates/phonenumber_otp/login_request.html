@@ -1,0 +1,33 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}{{ block.super }}
+    <link rel="stylesheet" href="{% static "admin/css/forms.css" %}">{% endblock %}
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+        &rsaquo; {% translate 'Password reset' %}
+    </div>
+{% endblock %}
+
+{% block content %}
+
+    <p>{% translate 'Enter your phone number please.' %}</p>
+
+    <form method="post">{% csrf_token %}
+        <fieldset class="module aligned">
+            <div class="form-row field-email">
+                {{ form.phone_number.errors }}
+                {{ form.non_field_errors }}
+                <div class="flex-container">
+                    <label for="id_phone_number">{% translate 'Phone Number:' %}</label>
+                    {{ form.phone_number }}
+                </div>
+            </div>
+        </fieldset>
+        <div class="submit-row">
+            <input type="submit" value="{% translate 'Send Code' %}">
+        </div>
+    </form>
+
+{% endblock %}

@@ -37,8 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # third party apps
+    'phonenumber_field',
 
     # local apps,
+    'phonenumber_otp.apps.PhonenumberOtpConfig',
     'accounts.apps.AccountsConfig',
     'pages.apps.PagesConfig',
 
@@ -136,3 +139,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Auth user settings
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# django phonenumberfield settings
+PHONENUMBER_DEFAULT_REGION = 'IR'
+
+# phonenumber_otp settings
+PHONE_NUMBER_FIELD_NAME = 'phone_number'
+
+FILL_USERNAME_WITH_PHONENUMBER = True
