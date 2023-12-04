@@ -3,6 +3,7 @@ from string import ascii_lowercase, digits
 
 from .models import OneTimePasswordSetting
 
+
 def generate_otp_code():
     # otp setting should be a singleton model.
     char_map = {
