@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'phonenumber_field',
 
     # local apps,
-    'phonenumber_otp.apps.PhonenumberOtpConfig',
     'accounts.apps.AccountsConfig',
     'pages.apps.PagesConfig',
 

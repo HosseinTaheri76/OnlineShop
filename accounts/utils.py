@@ -11,7 +11,7 @@ def generate_otp_code():
         OneTimePasswordSetting.CODE_TYPE_ALPHANUMERIC: ascii_lowercase + digits,
         OneTimePasswordSetting.CODE_TYPE_ALPHABETIC: ascii_lowercase
     }
-    otp_setting = OneTimePasswordSetting.objects.only('code_type', 'code_length').first()
-    char_domain = list(char_map[otp_setting.code_type])
+    code_type, code_length = OneTimePasswordSetting.objects.get_settings('code_type', 'code_length')
+    char_domain = list(char_map[code_type])
     shuffle(char_domain)
-    return ''.join(choices(char_domain, k=otp_setting.code_length))
+    return ''.join(choices(char_domain, k=code_length))
