@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -138,6 +139,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Auth user settings
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'accounts.auth_backends.EmailPasswordBackend',
+    'accounts.auth_backends.PhoneNumberOtpBackend',
+]
+
+LOGIN_REDIRECT_URL = reverse_lazy('pages:home')
 
 # django phonenumberfield settings
 PHONENUMBER_DEFAULT_REGION = 'IR'

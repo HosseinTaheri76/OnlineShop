@@ -1,19 +1,23 @@
 from uuid import uuid4
+from datetime import timedelta
 
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils.translation import gettext_lazy as _, gettext
+from django.utils import timezone
 
 from phonenumber_field.modelfields import PhoneNumberField
 
 
-class CustomUser(AbstractUser):
-    phone_number = PhoneNumberField(
-        null=True, blank=True,
-        db_index=True, unique=True,
-        verbose_name=_('phone number'),
-    )
+class UsableOtpRequestManager(models.Manager):
+
+    def get_queryset(self):
+        code_validity = OneTimePasswordSetting.objects.get_settings('code_validity')
+        return super().get_queryset().filter(
+            datetime_sent__gte=timezone.now() - timedelta(seconds=code_validity),
+            used=False
+        )
 
 
 class OtpSettingManager(models.Manager):
@@ -27,6 +31,15 @@ class OtpSettingManager(models.Manager):
         return queryset.first()
 
 
+class CustomUser(AbstractUser):
+    phone_number = PhoneNumberField(
+        null=True, blank=True,
+        db_index=True, unique=True,
+        verbose_name=_('phone number'),
+    )
+    email = models.EmailField(_("email address"), unique=True, blank=True)
+
+
 class OneTimePasswordRequest(models.Model):
     uuid = models.UUIDField(unique=True, default=uuid4, verbose_name=_('UUID'))  # for drf authentication
     phone_number = PhoneNumberField(verbose_name=_('Phone number'))
@@ -34,8 +47,16 @@ class OneTimePasswordRequest(models.Model):
     used = models.BooleanField(default=False, verbose_name=_('Is code used'))
     datetime_sent = models.DateTimeField(auto_now_add=True, verbose_name=_('Datetime sms sent'))
 
+    objects = models.Manager()
+    usable_requests = UsableOtpRequestManager()
+
     def __str__(self):
         return gettext('Otp with uuid=%(uuid)s') % {'uuid': self.uuid}
+
+    def get_remaining_seconds(self):
+        code_validity = OneTimePasswordSetting.objects.get_settings('code_validity')
+        remaining = (self.datetime_sent + timedelta(seconds=code_validity) - timezone.now()).seconds
+        return remaining if 0 <= remaining <= code_validity else 0
 
     class Meta:
         verbose_name = _('One time password request')

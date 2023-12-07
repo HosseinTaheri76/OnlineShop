@@ -1,6 +1,7 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 
-from .models import OneTimePasswordRequest, OneTimePasswordSetting
+from .models import OneTimePasswordRequest, OneTimePasswordSetting, CustomUser
 
 
 # Register your models here.
@@ -19,3 +20,6 @@ class OneTimePasswordSettingAdmin(admin.ModelAdmin):
 class OnetimePasswordRequestAdmin(admin.ModelAdmin):
     list_display = ['__str__', 'phone_number', 'code', 'used', 'datetime_sent']
     list_filter = ['used', 'datetime_sent', ]  # todo: custom filter usable not usable
+
+
+admin.site.register(CustomUser, UserAdmin)

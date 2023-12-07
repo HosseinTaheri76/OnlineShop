@@ -1,7 +1,6 @@
 {% extends 'shared/_auth_base.html' %}
-{% load i18n static %}
+{% load static i18n %}
 {% block body_content %}
-
     <div class="content vh-100">
         <div class="container-fluid h-100">
             <div class="auth h-100 d-flex align-items-center">
@@ -17,25 +16,29 @@
                                 </div>
                                 <div class="auth-form shadow-xl rounded-3  mt-5 bg-white">
                                     <div class="auth-form-title mb-4 slider-title-desc-center">
-                                        <!-- Todo: fix duplicate trans -->
                                         <h2 class="text-center h4 text-muted title-font">{% trans 'Login|Signup' %}</h2>
                                     </div>
-
                                     <form action="" method="post">
-                                        {% csrf_token %}
 
-                                        <div class="comment-item mb-3">
-                                            {% with label_class='form-label label-float' field=form.phone_or_email %}
+                                        {% csrf_token %}
+                                        <div class="comment-item mt-4 position-relative">
+                                            {% with  field=form.password label_class='form-label label-float' %}
                                                 {% include 'utils/forms/_form_field.html' with field=field label_class=label_class %}
                                             {% endwith %}
+                                            <div class="inline-btn-text">
+                                                <a href="{% url 'accounts:login-request' %}" class="btn border-0 main-color-one-bg rounded-pill">
+                                                    {% trans 'Login with phone number' %}
+                                                </a>
+                                            </div>
                                         </div>
 
-                                        <div class="form-group mb-0">
+                                        <div class="form-group">
                                             <button type="submit" class="btn btn-success w-100 mt-4 btn-login">
-                                                {% trans 'Submit' %}
+                                                {% trans 'Login' %}
                                             </button>
                                         </div>
                                     </form>
+
                                 </div>
 
                                 <!-- todo: move rules database -->

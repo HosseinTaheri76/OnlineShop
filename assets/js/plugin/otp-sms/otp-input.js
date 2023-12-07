@@ -5,9 +5,11 @@ window.addEventListener("load", function () {
     const OTPValueContainer = document.querySelector("#otp-value");
 
     const continueButton = document.querySelector("#submit");
+
+
     continueButton.addEventListener("click", (e) => {
         updateValue(inputs);
-        alert(OTPValueContainer.value);
+        document.getElementById('otp_form').submit();
     });
 
     // Focus first input
@@ -99,7 +101,7 @@ window.addEventListener("load", function () {
         if (key === "Backspace") focusPrev(inputs, curIndex);
     };
 
-    const inputs = OTPContainer.querySelectorAll("input:not(#otp-value)");
+    const inputs = OTPContainer.querySelectorAll("input:not(#otp-value):not([name='csrfmiddlewaretoken'])");
     inputs.forEach((input, index) => {
         input.addEventListener("input", (e) => handleInput(input, e.target.value, index, inputs));
 
