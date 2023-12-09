@@ -1,13 +1,13 @@
 <!-- start header code -->
-
+{% load i18n static %}
 <header class="header">
     <div class="container-fluid">
         <div class="row gy-3 align-items-center">
             <div class="col-xl-3 col-6">
                 <div class="header-logo">
                     <div class="image">
-                        <a href="index.html">
-                            <img src="assets/img/logo.png" class="img-fluid" alt="">
+                        <a href="{% url 'pages:home' %}">
+                            <img src="{% static 'img/logo.png' %}" class="img-fluid" alt="">
                         </a>
                     </div>
                     <div class="description d-md-block d-none">
@@ -35,7 +35,9 @@
                         </a>
                     </div>
                     <div class="header-btn-login d-lg-block d-none">
-                        <a href="" class="btn"><i class="bi bi-person-fill"></i> ورود / ثبت نام</a>
+                        <a href="{% url 'accounts:login-request' %}" class="btn">
+                            <i class="bi bi-person-fill"></i>{% trans 'Login|Signup' %}
+                        </a>
                     </div>
                     <div class="header-btn-login-responsive d-lg-none d-block">
                         <a href="" class="btn"><i class="bi bi-person-fill fs-2"></i></a>

@@ -37,7 +37,7 @@ class CustomUser(AbstractUser):
         db_index=True, unique=True,
         verbose_name=_('phone number'),
     )
-    email = models.EmailField(_("email address"), unique=True, blank=True)
+    email = models.EmailField(_("email address"), unique=True, null=True, blank=True)
 
 
 class OneTimePasswordRequest(models.Model):

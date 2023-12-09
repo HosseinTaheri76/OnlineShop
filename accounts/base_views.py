@@ -12,7 +12,7 @@ class BaseLoginRequestView(FormView):
 
     def dispatch(self, request, *args, **kwargs):
         if self.redirect_authenticated and request.user.is_authenticated:
-            return resolve_url(settings.LOGIN_REDIRECT_URL)
+            return redirect(resolve_url(settings.LOGIN_REDIRECT_URL))
         return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
@@ -26,11 +26,11 @@ class BaseLoginRequestView(FormView):
 
 
 class BaseLoginConfirmView(RedirectURLMixin, FormView):
-    redirect_authenticated = False
+    redirect_authenticated = True
 
     def dispatch(self, request, *args, **kwargs):
         if self.redirect_authenticated and request.user.is_authenticated:
-            return redirect(self.success_url())
+            return redirect(self.get_success_url())
         if not self.has_permission():
             return HttpResponseNotFound()
         return super().dispatch(request, *args, **kwargs)

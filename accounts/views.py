@@ -7,12 +7,10 @@ from . import base_views
 
 
 class LoginRequestView(base_views.BaseLoginRequestView):
-    # known security issue, user can come back to this page after sending otp request,
-    # filling polluting database and bombarding sms service.
     template_name = 'accounts/login-request.html'
     form_class = LoginRequestForm
     success_url = reverse_lazy('accounts:login-confirm-otp')
-    redirect_authenticated = False
+    redirect_authenticated = True
 
     def form_valid(self, form):
         session = self.request.session

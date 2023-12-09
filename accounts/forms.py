@@ -93,10 +93,8 @@ class LoginRequestForm(BootstrapFormMixin, forms.Form):
         if self.is_input_phone_number():
             phone_number = PhoneNumber.from_string(phone_or_email)
             otp_request = OneTimePasswordRequest(phone_number=phone_number)
-            code = generate_otp_code()
-            otp_request.code = code
+            otp_request.code = generate_otp_code()
             otp_request.save()
-            print(f'the code is ========= {code}')
             return otp_request
         elif self.is_input_email():
             return phone_or_email
