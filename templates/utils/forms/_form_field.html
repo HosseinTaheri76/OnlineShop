@@ -1,0 +1,25 @@
+{{ field }}
+<label for="{{ field.id_for_label }}" class="{{ label_class }}">
+    {{ field.label }}
+    {% if field.field.required %}
+        <span class="text-danger">*</span>
+    {% endif %}
+</label>
+{% if field.errors %}
+    <ul class="invalid-feedback mt-2 mb-0">
+        {% for error in field.errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+{% if field.help_text %}
+    <div class="my-1">
+        <small class="text-muted fw-medium">
+            <i class="bi bi-question-circle mx-1" style="font-size: 1.2em"></i>
+            {{ field.help_text }}
+        </small>
+    </div>
+{% endif %}
+
+
+

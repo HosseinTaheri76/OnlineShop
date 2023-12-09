@@ -1,3 +1,20 @@
+function buildResendForm(action, csrfToken, phoneNumber, btnText) {
+    return `
+    <form action="${action}" method="post">
+         ${csrfToken}
+         <input type="hidden" name="phone_or_email" value="${phoneNumber}" />
+         <span style="color: #3a3b9c; font-weight: 700; font-family: 'yekan-bakh' ; font-size: 14px;">
+         <button
+              type="submit" class='span-primary border-0'
+              style="border-bottom: 1px dashed #0761f6 !important;"
+         >
+                ${btnText}
+         </button>
+         </span>    
+    </form>
+   `
+}
+
 /**
  * Config Settings
  *
@@ -12,15 +29,15 @@ function config() {
     $config.loadingBars_width = 250;
     $config.loadingBars_height = 2;
     $config.loadingBars_border_color = '#3a3b9c';
-    $config.loadingBars_color =  '#3a3b9c';
-    $config.loadingBars_background_color =  '#f4f4f4';
+    $config.loadingBars_color = '#3a3b9c';
+    $config.loadingBars_background_color = '#f4f4f4';
 
     // Countdown Timer
     $config.timer_color = '#3a3b9c';
     $config.timer_font_weight = 700;
     $config.timer_font = 'yekan-bakh';
     $config.timer_font_size = 14;
-    $config.endtime_message = "<a href='' class='span-primary'>درخواست کد جدید</a>";
+
 
     return $config;
 }
@@ -42,8 +59,9 @@ function config() {
  * @param {number} $hoursAdd
  * @param {number} $minutesAdd
  * @param {number} $secondsAdd
+ * @param resend_form
  */
-function countdown($element, $daysAdd, $hoursAdd, $minutesAdd, $secondsAdd) {
+function countdown($element, $daysAdd, $hoursAdd, $minutesAdd, $secondsAdd, resend_form) {
 
     $config = this.config();
 
@@ -58,7 +76,7 @@ function countdown($element, $daysAdd, $hoursAdd, $minutesAdd, $secondsAdd) {
     $second = $dateNow.getSeconds();
     $now_loader = new Date().getTime();
 
-    var interval = setInterval(function() {
+    var interval = setInterval(function () {
 
         $loadingBars_loader = $('#' + $element).children('div')[0];
         $loadingBars_timer = $('#' + $element).children('div')[1];
@@ -72,15 +90,15 @@ function countdown($element, $daysAdd, $hoursAdd, $minutesAdd, $secondsAdd) {
         $distance = $countDownDate - $now;
 
         $distance_loader = $countDownDate - $now_loader;
-        $distance_loadingBar_part =  (($config.loadingBars_width / ($distance_loader - 1000)) * 1000);
+        $distance_loadingBar_part = (($config.loadingBars_width / ($distance_loader - 1000)) * 1000);
         $distance_loadingBar_part = Math.floor($distance_loadingBar_part * 10000) / 10000;
 
         $secondsPast = parseInt(($distance_loader - $distance) / 1000);
 
-        $newDistance  = $distance_loadingBar_part * $secondsPast;
-        if($newDistance > $config.loadingBars_width) $newDistance = $config.loadingBars_width;
+        $newDistance = $distance_loadingBar_part * $secondsPast;
+        if ($newDistance > $config.loadingBars_width) $newDistance = $config.loadingBars_width;
 
-        $($loadingBars_loader).animate({ width: $newDistance + 'px' }, 500);
+        $($loadingBars_loader).animate({width: $newDistance + 'px'}, 500);
 
         // TIMER
         $timerHtmlStart = '<span style="color: ' + $config.timer_color + '; font-weight: ' + $config.timer_font_weight + '; font-family: ' + $config.timer_font + '; font-size: ' + $config.timer_font_size + 'px;">';
@@ -93,11 +111,11 @@ function countdown($element, $daysAdd, $hoursAdd, $minutesAdd, $secondsAdd) {
         $($loadingBars_timer).css('height', $config.loadingBars_height);
 
         // SET LOADING-BAR
-        if($newDistance == $config.loadingBars_width) {
-                $($loadingBars_timer).html($timerHtmlStart + $config.endtime_message + $timerHtmlEnd);
+        if ($newDistance == $config.loadingBars_width) {
+            $($loadingBars_timer).html(resend_form);
 
-                clearInterval(interval);
-                return;
+            clearInterval(interval);
+            return;
         } else {
 
             $timeLeftFinal = setTimer($distance);
@@ -107,8 +125,6 @@ function countdown($element, $daysAdd, $hoursAdd, $minutesAdd, $secondsAdd) {
         }
     }, 1000);
 }
-
-
 
 
 /**
@@ -123,23 +139,23 @@ function setTimer($distance) {
     var minutes = Math.floor(($distance % (1000 * 60 * 60)) / (1000 * 60));
     var seconds = Math.floor(($distance % (1000 * 60)) / 1000);
 
-    if(hours < 10) {
+    if (hours < 10) {
         hours = "0" + hours;
     }
 
-    if(minutes < 10) {
+    if (minutes < 10) {
         minutes = "0" + minutes;
     }
 
-    if(seconds < 10) {
+    if (seconds < 10) {
         seconds = "0" + seconds;
     }
 
     var timeLeft = hours + ":" + minutes + ":" + seconds;
 
-    if(days !== 0) {
+    if (days !== 0) {
 
-        if(days === 1) {
+        if (days === 1) {
             var timeLeftFinal = days + " day + " + timeLeft;
         } else {
             var timeLeftFinal = days + " days + " + timeLeft;
