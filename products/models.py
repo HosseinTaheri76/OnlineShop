@@ -6,6 +6,8 @@ class ProductCategory(models.Model):
     parent = models.ForeignKey(
         to='self',
         on_delete=models.PROTECT,
+        null=True,
+        blank=True,
         related_name='sub_categories',
         verbose_name=_('Parent category')
     )

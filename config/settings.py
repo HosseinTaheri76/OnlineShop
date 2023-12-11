@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'modeltranslation',  # need to be initialized before admin
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,7 +45,7 @@ INSTALLED_APPS = [
     # local apps,
     'accounts.apps.AccountsConfig',
     'pages.apps.PagesConfig',
-    # 'products.apps.ProductsConfig',
+    'products.apps.ProductsConfig',
 
 ]
 
@@ -113,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'fa-ir'
+LANGUAGE_CODE = 'fa'
 
 USE_I18N = True
 
@@ -122,16 +123,18 @@ USE_TZ = True
 TIME_ZONE = 'Asia/Tehran'
 
 LANGUAGES = (
-    ('fa-ir', _('Persian')),
-    ('en-us', _('English')),
+    ('fa', _('Persian')),
+    ('en', _('English')),
 )
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "assets", ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
