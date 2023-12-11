@@ -3,14 +3,13 @@ from datetime import timedelta
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import validate_email
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.phonenumber import PhoneNumber
 from phonenumbers.phonenumberutil import NumberParseException
 from django.contrib.auth import authenticate
 
 from config.utils.forms.bootstrap import BootstrapFormMixin
-from .models import OneTimePasswordRequest, OneTimePasswordSetting, CustomUser
+from .models import OneTimePasswordRequest, CustomUser
 from .utils import generate_otp_code
 
 
@@ -42,13 +41,10 @@ class LoginRequestForm(BootstrapFormMixin, forms.Form):
         """
         Validate form to find out user can request otp or must wait for cooldown.
         """
-        code_validity = OneTimePasswordSetting.objects.get_settings('code_validity')
         active_request = OneTimePasswordRequest.usable_requests.filter(phone_number=phone_number).first()
         cooldown_remaining = 0
         if active_request:
-            cooldown_remaining = (
-                    active_request.datetime_sent + timedelta(seconds=code_validity) - timezone.now()
-            ).seconds
+            cooldown_remaining = active_request.get_remaining_seconds()
         return active_request is None, cooldown_remaining
 
     @staticmethod

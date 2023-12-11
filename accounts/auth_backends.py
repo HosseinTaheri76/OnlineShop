@@ -1,7 +1,6 @@
-from .models import CustomUser
 from django.conf import settings
 
-from .models import OneTimePasswordRequest, OneTimePasswordSetting
+from .models import OneTimePasswordRequest, OneTimePasswordSetting, CustomUser
 
 
 class _BaseBackend:
