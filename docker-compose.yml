@@ -18,5 +18,17 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "82:80"
+    depends_on:
+      - db
+    environment:
+      - "PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}"
+      - "PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}"
+    logging:
+      driver: none
+
 volumes:
   postgres_data:

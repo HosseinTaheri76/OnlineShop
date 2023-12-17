@@ -1,0 +1,58 @@
+{% load i18n %}
+<div class="pro_gallery">
+
+    <div class="icon-product-box">
+        <div class="icon-product-box-item" data-bs-toggle="modal"
+             data-bs-target="#shareModal"
+             data-bs-placement="right" title="{% trans 'Share' %}">
+            <i class="bi bi-share"></i>
+        </div>
+        <div class="icon-product-box-item" data-bs-toggle="tooltip"
+             data-bs-placement="right"
+             data-bs-title="{% trans 'Add to favorites' %}">
+            <i class="bi bi-heart"></i>
+        </div>
+        <div class="icon-product-box-item" data-bs-toggle="tooltip"
+             data-bs-placement="right"
+             data-bs-title="{% trans 'Compare product' %}">
+            <i class="bi bi-arrow-left-right"></i>
+        </div>
+        <div class="icon-product-box-item" data-bs-toggle="modal"
+             data-bs-target="#chartModal"
+             data-bs-toggle="tooltip" data-bs-placement="right"
+             title="{% trans 'Price change chart' %}">
+            <i class="bi bi-bar-chart"></i>
+        </div>
+    </div>
+    {% with product_images=product.images %}
+        <div class="pro-gallery-parent">
+            <div class="swiper product-gallery">
+                <div class="swiper-wrapper" title="{% trans 'Double click to zoom in' %}">
+                    {% for variant in product.product_variants %}
+                        {% for image in variant.images.all %}
+                            <div class="swiper-slide">
+                                <div class="swiper-zoom-container">
+                                    <img class="img-fluid" src="{{ image.image.url }}" alt="{{ image.alt_text }}"/>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+                <div class="swiper-button-next d-none d-lg-flex"></div>
+                <div class="swiper-button-prev d-none d-lg-flex"></div>
+                <div class="swiper-pagination d-none d-lg-block"></div>
+            </div>
+        </div>
+        <div thumbsSlider="" class="swiper product-gallery-thumb">
+            <div class="swiper-wrapper">
+                {% for variant in product.product_variants %}
+                    {% for image in variant.images.all %}
+                        <div class="swiper-slide">
+                            <img class="img-fluid" src="{{ image.image.url }}" alt="{{ image.alt_text }}"/>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endwith %}
+</div>

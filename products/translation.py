@@ -3,33 +3,43 @@ from modeltranslation.translator import translator, TranslationOptions
 from . import models
 
 
-class ProductCategoryTranslationOptions(TranslationOptions):
-    fields = ('title',)
-
-
-class ProductAttributeCategoryTranslationOptions(TranslationOptions):
-    fields = ('title',)
-
-
-class ProductColorTranslationOptions(TranslationOptions):
-    fields = ('title',)
-
-
-class ProductAttributeTranslationOptions(TranslationOptions):
-    fields = ('title',)
+class ProductImageTranslationOptions(TranslationOptions):
+    fields = ('alt_text',)
 
 
 class ProductTranslationOptions(TranslationOptions):
-    fields = ('title', 'short_description', 'full_description',)
+    fields = ('name', 'slug', 'description')
+
+
+class ProductTypeTranslationOptions(TranslationOptions):
+    fields = ('name',)
+
+
+class ProductAttributeTranslationOptions(TranslationOptions):
+    fields = ('name', 'description')
 
 
 class ProductAttributeValueTranslationOptions(TranslationOptions):
-    fields = ('value',)
+    fields = ('attribute_value',)
 
 
-translator.register(models.ProductCategory, ProductCategoryTranslationOptions)
-translator.register(models.ProductAttributeCategory, ProductAttributeCategoryTranslationOptions)
-translator.register(models.ProductColor, ProductColorTranslationOptions)
-translator.register(models.ProductAttribute, ProductAttributeTranslationOptions)
+class ProductCategoryTranslationOptions(TranslationOptions):
+    fields = ('name', 'slug',)
+
+
+class BrandTranslationOptions(TranslationOptions):
+    fields = ('name',)
+
+
+class ColorTranslationOptions(TranslationOptions):
+    fields = ('name',)
+
+
+translator.register(models.ProductImage, ProductImageTranslationOptions)
 translator.register(models.Product, ProductTranslationOptions)
+translator.register(models.ProductType, ProductTypeTranslationOptions)
+translator.register(models.ProductAttribute, ProductAttributeTranslationOptions)
 translator.register(models.ProductAttributeValue, ProductAttributeValueTranslationOptions)
+translator.register(models.ProductCategory, ProductCategoryTranslationOptions)
+translator.register(models.Brand, BrandTranslationOptions)
+translator.register(models.Color, ColorTranslationOptions)

@@ -1,0 +1,37 @@
+{% load i18n %}
+<div class="product-meta-feature bottom-border">
+    <div class="row gy-3">
+        <div class="col-lg-8">
+            <div class="product-meta-feature-items">
+                <h5 class="title font-16 mb-2">{% trans 'Product features' %}</h5>
+                <ul class="navbar-nav">
+                    {% for attr_val in default_variant.attributes %}
+                        {% if attr_val.is_feature %}
+                            <li class="nav item">
+                                <span>{{ attr_val.product_attribute }}:</span>
+                                <strong>{{ attr_val.attribute_value }}</strong>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="product-meta-rating text-lg-end text-start">
+                <div class="label-site label-waring rounded-pill">
+                    <span class="product-meta-rating-comment-count me-1">0</span>
+                    <span class="product-meta-rating-comment-count-text me-3">نظر</span>
+                    <span class="product-meta-rating-rating-count me-1">0</span>
+                    <span class="product-meta-rating-rating-count-text"><i
+                            class="bi bi-star-fill"></i></span>
+                </div>
+            </div>
+            <div class="product-meta-rating mt-2 text-lg-end text-start">
+                <div class="label-site label-success rounded-pill">
+                    آماده ارسال
+                    <i class="bi bi-truck ms-2"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
