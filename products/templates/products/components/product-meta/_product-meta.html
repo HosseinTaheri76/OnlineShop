@@ -4,15 +4,17 @@
             <div class="container-fluid">
                 <div class="row gy-3">
                     <div class="col-lg-4">
-                        {% include 'products/components/product-meta/_product-gallery.html'%}
+                        {% include 'products/components/product-meta/_product-gallery.html' %}
                     </div>
                     <div class="col-lg-8">
                         {% include 'products/components/product-meta/_product-title.html' %}
                         {% include 'products/components/product-meta/_product-overall.html' %}
                         {% include 'products/components/product-meta/_product-feature.html' %}
                         {% include 'products/components/product-meta/_product-color.html' %}
-                        {% include 'products/components/product-meta/_product-price.html' %}
-                        {% include 'products/components/product-meta/_product-add-cart.html' %}
+                        {% if product_variant.in_stock %} <!-- todo: maybe add inform me when in stock or show out of stock -->
+                            {% include 'products/components/product-meta/_product-price.html' %}
+                            {% include 'products/components/product-meta/_product-add-cart.html' %}
+                        {% endif %}
                     </div>
                 </div>
             </div>

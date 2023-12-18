@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _, gettext
 
 from colorfield.fields import ColorField
@@ -119,17 +120,6 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-    def default_variant(self):
-        return self.variants(manager='active_manager').filter(is_default=True).first()
-
-    def images(self):
-        return ProductImage.objects.filter(
-            product_variant_id__in=self.variants(manager='active_manager').values_list('id', flat=True)
-        )
-
-    def colors(self):
-        return Color.objects.filter(id__in=self.variants(manager='active_manager').values_list('color_id', flat=True))
-
 
 class ProductVariant(models.Model):
     """Store info about each product variant for example red xl variant for t-shirt"""
@@ -180,6 +170,9 @@ class ProductVariant(models.Model):
 
     def __str__(self):
         return f'{self.product.name}-{self.sku}'
+
+    def get_absolute_url(self):
+        return reverse('products:product-variant-detail', args=(self.sku, self.product.slug,))
 
 
 class ProductImage(models.Model):

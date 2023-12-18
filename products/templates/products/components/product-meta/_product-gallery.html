@@ -1,6 +1,5 @@
 {% load i18n %}
 <div class="pro_gallery">
-
     <div class="icon-product-box">
         <div class="icon-product-box-item" data-bs-toggle="modal"
              data-bs-target="#shareModal"
@@ -24,18 +23,16 @@
             <i class="bi bi-bar-chart"></i>
         </div>
     </div>
-    {% with product_images=product.images %}
+    {% with images=product_variant.images.all %}
         <div class="pro-gallery-parent">
             <div class="swiper product-gallery">
                 <div class="swiper-wrapper" title="{% trans 'Double click to zoom in' %}">
-                    {% for variant in product.product_variants %}
-                        {% for image in variant.images.all %}
-                            <div class="swiper-slide">
-                                <div class="swiper-zoom-container">
-                                    <img class="img-fluid" src="{{ image.image.url }}" alt="{{ image.alt_text }}"/>
-                                </div>
+                    {% for image in images %}
+                        <div class="swiper-slide">
+                            <div class="swiper-zoom-container">
+                                <img class="img-fluid" src="{{ image.image.url }}" alt="{{ image.alt_text }}"/>
                             </div>
-                        {% endfor %}
+                        </div>
                     {% endfor %}
                 </div>
                 <div class="swiper-button-next d-none d-lg-flex"></div>
@@ -45,12 +42,10 @@
         </div>
         <div thumbsSlider="" class="swiper product-gallery-thumb">
             <div class="swiper-wrapper">
-                {% for variant in product.product_variants %}
-                    {% for image in variant.images.all %}
-                        <div class="swiper-slide">
-                            <img class="img-fluid" src="{{ image.image.url }}" alt="{{ image.alt_text }}"/>
-                        </div>
-                    {% endfor %}
+                {% for image in images %}
+                    <div class="swiper-slide">
+                        <img class="img-fluid" src="{{ image.image.url }}" alt="{{ image.alt_text }}"/>
+                    </div>
                 {% endfor %}
             </div>
         </div>

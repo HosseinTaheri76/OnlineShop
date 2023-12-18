@@ -5,11 +5,11 @@
             <div class="product-meta-feature-items">
                 <h5 class="title font-16 mb-2">{% trans 'Product features' %}</h5>
                 <ul class="navbar-nav">
-                    {% for attr_val in default_variant.attributes %}
-                        {% if attr_val.is_feature %}
+                    {% for attribute_value in product_variant.attribute_values.all %}
+                        {% if attribute_value.is_feature %}
                             <li class="nav item">
-                                <span>{{ attr_val.product_attribute }}:</span>
-                                <strong>{{ attr_val.attribute_value }}</strong>
+                                <span>{{ attribute_value.product_attribute }}:</span>
+                                <strong>{{ attribute_value.attribute_value }}</strong>
                             </li>
                         {% endif %}
                     {% endfor %}
@@ -27,10 +27,12 @@
                 </div>
             </div>
             <div class="product-meta-rating mt-2 text-lg-end text-start">
-                <div class="label-site label-success rounded-pill">
-                    آماده ارسال
-                    <i class="bi bi-truck ms-2"></i>
-                </div>
+                {% if product_variant.in_stock %}
+                    <div class="label-site label-success rounded-pill">
+                        {% trans 'Ready to send' %}
+                        <i class="bi bi-truck ms-2"></i>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>

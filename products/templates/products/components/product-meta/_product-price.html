@@ -1,12 +1,12 @@
-<div class="product-meta-action mt-4 bottom-border">
+<div class="product-meta-action mt-4 bottom-border"> <!--todo: price based on language and consider discount prices -->
     <div class="row align-items-center gy-3">
         <div class="col-sm-6">
             <div class="d-flex align-items-center justify-content-sm-start justify-content-center">
                 <p class="mb-0 old-price font-22 text-muted-two text-decoration-line-through me-3">
-                    {{ default_variant.store_price_dollar }}
+                    {{ product_variant.store_price_dollar }}
                 </p>
                 <h6 class="font-30 title-font new-price main-color-one-color">
-                    {{ default_variant.retail_price_dollar }} $
+                    {{ product_variant.retail_price_dollar }} $
                 </h6>
             </div>
         </div>
