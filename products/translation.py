@@ -9,6 +9,7 @@ class ProductImageTranslationOptions(TranslationOptions):
 
 class ProductTranslationOptions(TranslationOptions):
     fields = ('name', 'slug', 'description')
+    required_languages = {'default': ('name',), 'en': ('name',)}
 
 
 class ProductTypeTranslationOptions(TranslationOptions):
