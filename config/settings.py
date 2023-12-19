@@ -24,7 +24,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG") == "True"
 
@@ -102,12 +101,17 @@ DATABASES = {
 # cache settings
 REDIS_CACHE_HOST = os.getenv('REDIS_CACHE_HOST')
 REDIS_CACHE_PORT = os.getenv('REDIS_CACHE_PORT')
+
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": f"redis://{REDIS_CACHE_HOST}:{REDIS_CACHE_PORT}",
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": f"redis://{REDIS_CACHE_HOST}:{REDIS_CACHE_PORT}/",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient"
+        },
     }
 }
+
 CACHE_TTL = 60 * 10
 
 # Password validation
@@ -181,3 +185,7 @@ FILL_USERNAME_WITH_PHONENUMBER = True
 if DEBUG:
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
+
+# sorl-thumbnail settings
+THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
+THUMBNAIL_REDIS_HOST = REDIS_CACHE_HOST
