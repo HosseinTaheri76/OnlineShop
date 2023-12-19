@@ -10,6 +10,15 @@ services:
       - "8000:8000"
     depends_on:
       - db
+      - redis
+    environment:
+      - "DEBUG=${DJANGO_DEBUG}"
+      - "SECRET_KEY=${DJANGO_SECRET_KEY}"
+      - "DB_NAME=${DJANGO_DB_NAME}"
+      - "DB_USERNAME=${DJANGO_DB_USERNAME}"
+      - "DB_PASSWORD=${DJANGO_DB_PASSWORD}"
+      - "DB_HOST=${DJANGO_DB_HOST}"
+      - "DB_PORT=${DJANGO_DB_PORT}"
 
   db:
     image: postgres:14
@@ -27,8 +36,9 @@ services:
     environment:
       - "PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}"
       - "PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}"
-    logging:
-      driver: none
+
+  redis:
+    image: redis
 
 volumes:
   postgres_data:

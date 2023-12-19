@@ -1,15 +1,11 @@
 {% load i18n %}
-<div class="product-meta-overal my-3 bottom-border">
+<div class="product-meta-overall my-3 bottom-border">
     <div class="row gy-3 align-items-center">
         <div class="col-md-4">
             {% with in_stock=product_variant.in_stock %}
                 <div class="label-site rounded-pill bg-s {% if in_stock %}bg-success-subtle{% else %}bg-danger-subtle{% endif %}">
                     <i class="bi me-1 {% if in_stock %}bi-check-circle{% else %}bi-x-circle{% endif %}"></i>
-                    {% if in_stock %}
-                        {% trans 'In stock' %}
-                    {% else %}
-                        {% trans 'Out of stock' %}
-                    {% endif %}
+                    {% if in_stock %}{% trans 'In stock' %}{% else %}{% trans 'Out of stock' %}{% endif %}
                 </div>
             {% endwith %}
         </div>
