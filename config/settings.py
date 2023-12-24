@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'products.apps.ProductsConfig',
     'comments.apps.CommentsConfig',
 
+
 ]
 
 MIDDLEWARE = [
@@ -173,6 +174,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 LOGIN_REDIRECT_URL = reverse_lazy('pages:home')
+LOGIN_URL = reverse_lazy('accounts:login-request')
 
 # django phonenumberfield settings
 PHONENUMBER_DEFAULT_REGION = 'IR'

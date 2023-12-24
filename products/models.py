@@ -22,6 +22,7 @@ class ActiveProductVariantManager(models.Manager):
         return super().get_queryset().filter(product__category__is_active=True, product__is_active=True, is_active=True)
 
 
+
 class ProductCategory(models.Model):
     """Category for products"""
     name = models.CharField(max_length=128, verbose_name=_('Name'))

@@ -1,0 +1,31 @@
+{% load i18n %}
+<div class="tab-pane fade active show"
+     role="tabpanel" aria-labelledby="#productTable">
+    <h6 class="font-26 mb-2 title-font">{% trans 'Specifications' %}</h6>
+    <div class="box_list mt-4">
+        <section>
+            <ul class="param_list list-inline">
+                <div class="container-fluid">
+                    {% for attribute_value in product_variant.attribute_values.all %}
+                        <div class="row ps-md-2">
+                            <li class="list-inline-item col-md-3 pe-md-1 pe-md-3 p-0 m-0">
+                                <div class="box_params_list">
+                                    <p class="block border_right_custom1">
+                                        {{ attribute_value.product_attribute }}
+                                    </p>
+                                </div>
+                            </li>
+                            <li class="list-inline-item col-md-8 p-0 m-0">
+                                <div class="box_params_list">
+                                    <p class="block border_right_custom2">
+                                        {{ attribute_value.attribute_value }}
+                                    </p>
+                                </div>
+                            </li>
+                        </div>
+                    {% endfor %}
+                </div>
+            </ul>
+        </section>
+    </div>
+</div>

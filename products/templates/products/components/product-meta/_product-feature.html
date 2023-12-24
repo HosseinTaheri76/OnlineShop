@@ -19,9 +19,9 @@
         <div class="col-lg-4">
             <div class="product-meta-rating text-lg-end text-start">
                 <div class="label-site label-waring rounded-pill">
-                    <span class="product-meta-rating-comment-count me-1">0</span>
+                    <span class="product-meta-rating-comment-count me-1">{{ product_variant.product_comments_count }}</span>
                     <span class="product-meta-rating-comment-count-text me-3">نظر</span>
-                    <span class="product-meta-rating-rating-count me-1">0</span>
+                    <span class="product-meta-rating-rating-count me-1">{{ product_variant.product.score }}</span>
                     <span class="product-meta-rating-rating-count-text"><i
                             class="bi bi-star-fill"></i></span>
                 </div>

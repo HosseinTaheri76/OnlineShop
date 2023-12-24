@@ -1,12 +1,133 @@
 {% extends 'shared/_base_site.html' %}
-{% load i18n %}
+{% load i18n static %}
 {% block title %}{% endblock %}
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'js/plugin/tagify/tagify.css' %}">
+{% endblock %}
 {% block content %}
     <!-- start product meta -->
     {% include 'products/components/product-meta/_product-meta.html' %}
     <!-- end product meta -->
+    <!-- start product desc -->
+    {% include 'products/components/product-description/_product-description.html' %}
+    <!-- end product desc -->
+{% endblock %}
+{% block modals %}
+    <!-- chart modal -->
+    <div class="modal fade" id="chartModal" tabindex="-1" aria-labelledby="chartModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-comment-title">
+                        <h5 class="modal-title fw-bold text-muted-2">نمودار قیمت فروش
+                        </h5>
+                        <p class="text-muted mt-1 font-14">گوشی موبایل اپل مدل iPhone 11 تک سیم‌ کارت ظرفیت 128 گیگابایت
+                            و رم 4 گیگابایت - هند
+                        </p>
+                    </div>
+                    <button type="button" class="btn-close waves-effect waves-light" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn main-color-one-bg waves-effect waves-light"
+                            data-bs-dismiss="modal">بستن
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end chart modal -->
+    <!-- modal shahre -->
+    <div class="share-modal">
+        <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="exampleModalLabel">اشتراک گذاری</h6>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h4 class="font-14 my-3">این کالا را با دوستان خود به اشتراک بگذارید!</h4>
+                        <button type="button" class="btn d-block text-center main-color-one-bg w-100" id="liveToastBtn">
+                            <i class="bi bi-clipboard text-white me-1"></i>
+                            کپی کردن لینک
+                        </button>
+                        <div class="row mt-3 gy-3">
+                            <div class="col-3">
+                                <a href="" class="btn rounded-circle" style="background-color: #11c56b !important;">
+                                    <i class="bi bi-whatsapp font-20"></i>
+                                </a>
+                            </div>
+                            <div class="col-3">
+                                <a href="" class="btn rounded-circle" style="background-color: #137dcf !important;">
+                                    <i class="bi bi-twitter font-20"></i>
+                                </a>
+                            </div>
+                            <div class="col-3">
+                                <a href="" class="btn rounded-circle" style="background-color: #07528b !important;">
+                                    <i class="bi bi-facebook font-20"></i>
+                                </a>
+                            </div>
+                            <div class="col-3">
+                                <a href="" class="btn rounded-circle" style="background-color: #ed3a0d !important;">
+                                    <i class="bi bi-pinterest font-20"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end modal share-->
 {% endblock %}
 {% block extra_scripts %}
+    <script src="{% static 'js/plugin/tagify/jQuery.tagify.min.js' %}"></script>
+    <script src="{% static 'js/plugin/chartjs/chart.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            ///input tag
+            $('.commentTags').tagify();
+        });
+    </script>
+    <script>
+        const ctx = document.getElementById('myChart');
+        Chart.defaults.font.family = "yekan-bakh";
+        Chart.defaults.font.size = 14;
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['23 مهر 1401', '11 آبان 1401', '4 آذر 1401', '11 دی 1401', '5 بهمن 1401',
+                    '19 اسفند 1401'
+                ],
+                datasets: [{
+                    label: 'iphone 12 promax 256',
+                    data: [1500000, 1700000, 1900000, 1400000, 1600000, 3200000],
+                    borderWidth: 4,
+                    borderColor: '#1c39bb',
+                    pointBackgroundColor: '#eee',
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    tension: 0.1,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: false,
+                        text: (ctx) => 'نمودار فروش محصول: ' + 'ایفون 12 pro max',
+                    },
+                }
+            }
+        });
+    </script>
     <script>
         // if user clicks on a color navigates user to related product variant detail
         $(document).ready(function () {

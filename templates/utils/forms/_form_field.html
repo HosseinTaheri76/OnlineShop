@@ -1,10 +1,10 @@
-{{ field }}
 <label for="{{ field.id_for_label }}" class="{{ label_class }}">
     {{ field.label }}
     {% if field.field.required %}
         <span class="text-danger">*</span>
     {% endif %}
 </label>
+{{ field }}
 {% if field.errors %}
     <ul class="invalid-feedback mt-2 mb-0">
         {% for error in field.errors %}
