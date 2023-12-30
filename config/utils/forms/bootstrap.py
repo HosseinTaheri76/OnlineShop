@@ -26,5 +26,6 @@ class BootstrapFormMixin:
         super().full_clean()
         # add class is-invalid to field that has error
         for field_name, errors in self.errors.items():
-            widget_attrs = self.fields[field_name].widget.attrs
-            widget_attrs['class'] = widget_attrs.get('class', '') + ' is-invalid'
+            if field_name != '__all__':
+                widget_attrs = self.fields[field_name].widget.attrs
+                widget_attrs['class'] = widget_attrs.get('class', '') + ' is-invalid'

@@ -15,6 +15,7 @@ from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse_lazy
+from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -44,13 +45,14 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'colorfield',
     'sorl.thumbnail',
+    'tinymce',
+    'jalali_date',
 
     # local apps,
     'accounts.apps.AccountsConfig',
     'pages.apps.PagesConfig',
     'products.apps.ProductsConfig',
     'comments.apps.CommentsConfig',
-
 
 ]
 
@@ -192,3 +194,49 @@ if DEBUG:
 # sorl-thumbnail settings
 THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
 THUMBNAIL_REDIS_HOST = REDIS_CACHE_HOST
+
+# tiny mce settings
+TINYMCE_DEFAULT_CONFIG = {
+    "height": 800,
+    "width": '100%',
+    "menubar": "file edit view insert format tools table help",
+    "plugins": "advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code "
+               "fullscreen insertdatetime media table paste code help wordcount spellchecker",
+    "toolbar": "undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft "
+               "aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor "
+               "backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | "
+               "fullscreen  preview save print | insertfile image media pageembed template link anchor codesample | "
+               "a11ycheck ltr rtl | showcomments addcomment code",
+    "custom_undo_redo_levels": 10,
+    'font_formats': "Andale Mono=andale mono,times;" +
+                    "Arial=arial,helvetica,sans-serif;" +
+                    "Arial Black=arial black,avant garde;" +
+                    "Book Antiqua=book antiqua,palatino;" +
+                    "Comic Sans MS=comic sans ms,sans-serif;" +
+                    "Courier New=courier new,courier;" +
+                    "Georgia=georgia,palatino;" +
+                    "Helvetica=helvetica;" +
+                    "Impact=impact,chicago;" +
+                    "Symbol=symbol;" +
+                    "Tahoma=tahoma,arial,helvetica,sans-serif;" +
+                    "Terminal=terminal,monaco;" +
+                    "Times New Roman=times new roman,times;" +
+                    "Trebuchet MS=trebuchet ms,geneva;" +
+                    "Verdana=verdana,geneva;" +
+                    'Yekan-bakh=yekan-bakh,sans-serif;' +
+                    "Webdings=webdings;" +
+                    "Wingdings=wingdings,zapf dingbats",
+    'content_style': "@import url('http://127.0.0.1:8000/static/font/yekan-bakh/yekan-bakh.css');" +  # todo: change in production
+                     "h1,h2,h3,h4,h5,h6,p,div{font-family: 'yekan-bakh', sans-serif;}",
+}
+
+# messages settings
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'secondary',
+    messages.INFO: 'info',
+    messages.SUCCESS: 'success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+}
+

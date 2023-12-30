@@ -1,0 +1,98 @@
+{% load i18n %}
+<div class="product-desc py-20" id="descBox">
+    <div class="container-fluid">
+
+        <div class="product-desc-tab">
+            <ul class="nav" id="productTab" role="tablist">
+                <li class="nav-item">
+                    <button class="{% if active_tab == 'review' %}active {% endif %}waves-effect waves-light"
+                            id="productDescLess"
+                            data-bs-toggle="tab" data-bs-target="#productDescLess-pane" role="button"
+                            type="button" aria-selected="true">
+                        {% trans 'Overview' %}
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="waves-effect waves-light" id="productTable"
+                            data-bs-toggle="tab" data-bs-target="#productTable-pane" role="button"
+                            type="button" aria-selected="false">
+                        {% trans 'Specifications' %}
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="{% if active_tab == 'comments' %}active {% endif %}waves-effect waves-light"
+                            id="productComment"
+                            data-bs-toggle="tab" data-bs-target="#productComment-pane" role="button"
+                            type="button" aria-selected="false">
+                        {% trans 'Comments' %}
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="content-box">
+            <div class="container-fluid">
+                <div class="product-descs" id="prodesc">
+                    <div class="product-desc">
+                        <div class="product-desc-tab-content">
+                            <div class="tab-content" id="productTabContent">
+                                <div class="{% if active_tab == 'review' %}active show {% endif %}tab-pane fade product-desc-less-contents"
+                                     id="productDescLess-pane">
+                                    <div class="product-desc-content">
+                                        <input type="checkbox" class="read-more-state" id="readMore3"/>
+                                        <div class="read-more-wrap">
+                                            <!-- todo: fix read more -->
+                                            {% with description=product_variant.product.description %}
+                                                <h6 class="font-22 mb-2 title-font">{% trans 'Product review' %}</h6>
+                                                {{ description|truncatewords_html:100|safe }}
+                                                <div class="read-more-target">
+                                                    {{ description|safe }}
+                                                </div>
+                                            {% endwith %}
+                                        </div>
+                                        <label for="readMore3" class="read-more-trigger"></label>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="productTable-pane">
+                                    <div class="tab-pane fade active show"
+                                         role="tabpanel" aria-labelledby="#productTable">
+                                        <h6 class="font-26 mb-2 title-font">{% trans 'Specifications' %}</h6>
+                                        <div class="box_list mt-4">
+                                            <section>
+                                                <ul class="param_list list-inline">
+                                                    <div class="container-fluid">
+                                                        {% for attribute_value in product_variant.attribute_values.all %}
+                                                            <div class="row ps-md-2">
+                                                                <li class="list-inline-item col-md-3 pe-md-1 pe-md-3 p-0 m-0">
+                                                                    <div class="box_params_list">
+                                                                        <p class="block border_right_custom1">
+                                                                            {{ attribute_value.product_attribute }}
+                                                                        </p>
+                                                                    </div>
+                                                                </li>
+                                                                <li class="list-inline-item col-md-8 p-0 m-0">
+                                                                    <div class="box_params_list">
+                                                                        <p class="block border_right_custom2">
+                                                                            {{ attribute_value.attribute_value }}
+                                                                        </p>
+                                                                    </div>
+                                                                </li>
+                                                            </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                </ul>
+                                            </section>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="{% if active_tab == 'comments' %}active show {% endif %}tab-pane fade product-comment-content"
+                                     id="productComment-pane">
+                                    {{ comments_partial.rendered_content }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

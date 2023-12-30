@@ -1,0 +1,189 @@
+{% load i18n thumbnail %}
+<div class="product-meta py-20">
+    <div class="container-fluid">
+        <div class="content-box">
+            <div class="container-fluid">
+                <div class="row gy-3">
+                    <div class="col-lg-4">
+                        <div class="pro_gallery">
+                            <div class="icon-product-box">
+                                <div class="icon-product-box-item" data-bs-toggle="modal"
+                                     data-bs-target="#shareModal"
+                                     data-bs-placement="right" title="{% trans 'Share' %}">
+                                    <i class="bi bi-share"></i>
+                                </div>
+                                <div class="icon-product-box-item" data-bs-toggle="tooltip"
+                                     data-bs-placement="right"
+                                     data-bs-title="{% trans 'Add to favorites' %}">
+                                    <i class="bi bi-heart"></i>
+                                </div>
+                                <div class="icon-product-box-item" data-bs-toggle="tooltip"
+                                     data-bs-placement="right"
+                                     data-bs-title="{% trans 'Compare product' %}">
+                                    <i class="bi bi-arrow-left-right"></i>
+                                </div>
+                                <div class="icon-product-box-item" data-bs-toggle="modal"
+                                     data-bs-target="#chartModal"
+                                     data-bs-toggle="tooltip" data-bs-placement="right"
+                                     title="{% trans 'Price change chart' %}">
+                                    <i class="bi bi-bar-chart"></i>
+                                </div>
+                            </div>
+                            {% with images=product_variant.images.all %}
+                                <div class="pro-gallery-parent">
+                                    <div class="swiper product-gallery">
+                                        <div class="swiper-wrapper" title="{% trans 'Double click to zoom in' %}">
+                                            {% for image in images %}
+                                                <div class="swiper-slide">
+                                                    <div class="swiper-zoom-container">
+                                                        {% thumbnail image.image "800x800" crop='center' as img %}
+                                                            <img class="img-fluid" src="{{ img.url }}"
+                                                                 alt="{{ image.alt_text }}"/>
+                                                        {% endthumbnail %}
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                        <div class="swiper-button-next d-none d-lg-flex"></div>
+                                        <div class="swiper-button-prev d-none d-lg-flex"></div>
+                                        <div class="swiper-pagination d-none d-lg-block"></div>
+                                    </div>
+                                </div>
+                                <div thumbsSlider="" class="swiper product-gallery-thumb">
+                                    <div class="swiper-wrapper">
+                                        {% for image in images %}
+                                            <div class="swiper-slide">
+                                                {% thumbnail image.image "800x800" crop='center' as img %}
+                                                    <img class="img-fluid" src="{{ img.url }}"
+                                                         alt="{{ image.alt_text }}"/>
+                                                {% endthumbnail %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endwith %}
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="product-mete-title bottom-border">
+                            <h3 class="title-font h4">{{ product_variant.product.name_fa }}</h3>
+                            <p class="mb-0 mt-3">{{ product_variant.product.name_en }}</p>
+                        </div>
+                        <div class="product-meta-overall my-3 bottom-border">
+                            <div class="row gy-3 align-items-center">
+                                <div class="col-md-4">
+                                    {% with in_stock=product_variant.in_stock %}
+                                        <div class="label-site rounded-pill bg-s {% if in_stock %}bg-success-subtle{% else %}bg-danger-subtle{% endif %}">
+                                            <i class="bi me-1 {% if in_stock %}bi-check-circle{% else %}bi-x-circle{% endif %}"></i>
+                                            {% if in_stock %}{% trans 'In stock' %}{% else %}
+                                                {% trans 'Out of stock' %}{% endif %}
+                                        </div>
+                                    {% endwith %}
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-center">
+                                        <span class="text-muted-two me-2">{% trans 'Category' %}</span>
+                                        <div class="label-site rounded-pill">
+                                            {{ product_variant.product.category.name }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <span class="text-muted-two me-2">{% trans 'Product sku' %}</span>
+                                    <span>{{ product_variant.sku }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% load i18n %}
+                        <div class="product-meta-feature bottom-border">
+                            <div class="row gy-3">
+                                <div class="col-lg-8">
+                                    <div class="product-meta-feature-items">
+                                        <h5 class="title font-16 mb-2">{% trans 'Product features' %}</h5>
+                                        <ul class="navbar-nav">
+                                            {% for attribute_value in product_variant.attribute_values.all %}
+                                                {% if attribute_value.is_feature %}
+                                                    <li class="nav item">
+                                                        <span>{{ attribute_value.product_attribute }}:</span>
+                                                        <strong>{{ attribute_value.attribute_value }}</strong>
+                                                    </li>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="product-meta-rating text-lg-end text-start">
+                                        <div class="label-site label-waring rounded-pill">
+                                            <span class="product-meta-rating-comment-count me-1">{{ product_variant.product_comments_count }}</span>
+                                            <span class="product-meta-rating-comment-count-text me-3">نظر</span>
+                                            <span class="product-meta-rating-rating-count me-1">{{ product_variant.product.score }}</span>
+                                            <span class="product-meta-rating-rating-count-text"><i
+                                                    class="bi bi-star-fill"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="product-meta-rating mt-2 text-lg-end text-start">
+                                        {% if product_variant.in_stock %}
+                                            <div class="label-site label-success rounded-pill">
+                                                {% trans 'Ready to send' %}
+                                                <i class="bi bi-truck ms-2"></i>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-meta-color bottom-border my-4">
+                            <h5 class="font-16">
+                                {% trans 'Select product color' %}
+                            </h5>
+                            <div class="product-meta-color-items">
+                                {% for variant in product_variant.product.variants.all %}
+
+                                    <input type="radio" class="btn-check" name="options" id="{{ variant.sku }}"
+                                           {% if product_variant.id == variant.id %}checked{% endif %}
+                                           autocomplete="off" data-url="{{ variant.get_absolute_url }}">
+
+                                    <label class="btn" for="{{ variant.sku }}">
+                                        <span style="background-color: {{ variant.color.color }};"></span>
+                                        {{ variant.color.name }}
+                                    </label>
+
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% if product_variant.in_stock %}
+                            <!-- todo: maybe add inform me when in stock or show out of stock -->
+                            <div class="product-meta-action mt-4 bottom-border">
+                                <!--todo: price based on language and consider discount prices -->
+                                <div class="row align-items-center gy-3">
+                                    <div class="col-sm-6">
+                                        <div class="d-flex align-items-center justify-content-sm-start justify-content-center">
+                                            <p class="mb-0 old-price font-22 text-muted-two text-decoration-line-through me-3">
+                                                {{ product_variant.store_price_dollar }}
+                                            </p>
+                                            <h6 class="font-30 title-font new-price main-color-one-color">
+                                                {{ product_variant.retail_price_dollar }} $
+                                            </h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 text-center">
+                                        <div class="counter">
+                                            <input type="text" name="count" class="counter" value="1">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="product-meta-add-to-cart mt-4">
+                                <a href="" class="btn product-meta-add-to-cart-btn main-color-one-bg rounded-pill">
+                                    {% trans 'Add to cart' %}
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="Dottedsquare-product d-lg-flex d-none"></div>
+    </div>
+</div>

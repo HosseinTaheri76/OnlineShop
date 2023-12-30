@@ -1,0 +1,102 @@
+{% with related_variants=product_variant.get_random_related_variants %}
+    {% if related_variants %}
+        <div class="product-boxs site-slider py-30">
+            <div class="container-fluid">
+
+                <div class="slider-title">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="slider-title-desc">
+                                <div class="slider-title-icon">
+                                    <div class="slider-title-icon-parent">
+                                        <div>
+                                            <span><i class="bi bi-caret-right-fill"></i></span>
+                                            <h6>تخفیفات</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="slider-title-title">
+                                    <h2 class="h1">محصولات <span class="main-color-one-color title-font">مشابه</span>
+                                    </h2>
+                                    <p class="mb-0 mt-2 h5 text-muted">محصولات مشابه با این محصول را در پایین میتوانید
+                                        مشاهده کنید</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="slider-title-link">
+                                <a href="" class="main-color-one-color font-16"> مشاهده همه <i
+                                        class="bi bi-caret-left-fill"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slider-parent">
+                    <div class="swiper" id="product-slider">
+
+                        <div class="swiper-wrapper ">
+                            {% for variant in related_variants %}
+                              <div class="swiper-slide">
+                                <div class="product-box">
+                                    <a href="">
+                                        <div class="product-box-image">
+                                            <img src="{{ variant.thumbnail_image.url }}" alt="">
+                                        </div>
+                                        <div class="product-box-title">
+                                            <h5 class="text-overflow-2">
+                                                {{ variant.product.name }}
+                                            </h5>
+                                        </div>
+                                        <div class="product-box-price">
+                                            <div class="product-box-price-discount">
+                                                <span class="d-block badge main-color-one-bg text-white font-14 rounded-pill">25%</span>
+                                                <del>2,500,000</del>
+                                            </div>
+                                            <div class="product-box-price-price">
+                                                <h5 class="title-font main-color-green-color h2 mb-0">799,000</h5>
+                                                <p class="mb-0 text-muted">تومان</p>
+                                            </div>
+                                        </div>
+                                        <div class="product-box-hover">
+                                            <nav class="navbar navbar-expand justify-content-center">
+                                                <ul class="navbar-nav align-items-center">
+                                                    <li class="nav-item"><a href=""
+                                                                            class="nav-item product-box-hover-item me-3">مشاهده
+                                                        محصول</a></li>
+                                                    <li class="nav-item"><a href=""
+                                                                            class="nav-item product-box-hover-item product-box-hover-item-btn me-1"
+                                                                            data-bs-toggle="tooltip"
+                                                                            data-bs-placement="top"
+                                                                            data-bs-title="افزودن به سبد خرید"><i
+                                                            class="bi bi-basket"></i></a></li>
+                                                    <li class="nav-item"><a href=""
+                                                                            class="nav-item product-box-hover-item product-box-hover-item-btn"
+                                                                            data-bs-toggle="tooltip"
+                                                                            data-bs-placement="top"
+                                                                            data-bs-title="افزودن به علاقه ها"><i
+                                                            class="bi bi-heart"></i></a></li>
+                                                </ul>
+                                            </nav>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button class="amazing-offer-btn" data-scroll-to="#banners"></button>
+                </div>
+
+            </div>
+        </div>
+    {% endif %}
+{% endwith %}

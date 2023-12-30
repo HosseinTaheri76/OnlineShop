@@ -4,11 +4,15 @@ Django==4.2.7
 django-colorfield==0.11.0
 django-crispy-forms==2.1
 django-debug-toolbar==4.2.0
+django-jalali-date==1.0.2
 django-modeltranslation==0.18.11
 django-phonenumber-field==7.2.0
 django-redis==5.4.0
+django-render-partial==0.4
+django-tinymce==3.6.1
 freezegun==1.3.1
 install==1.3.5
+jdatetime==4.1.1
 phonenumbers==8.13.26
 Pillow==10.1.0
 psycopg2-binary==2.9.9

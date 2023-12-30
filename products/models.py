@@ -1,6 +1,11 @@
+import random
+from random import choices
+
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _, gettext
+from django.db.models import Case, When, Value, ImageField, F, Subquery, OuterRef, ImageField
+from django.db.models.functions import Concat
 
 from colorfield.fields import ColorField
 
@@ -20,7 +25,6 @@ class ActiveProductVariantManager(models.Manager):
 
     def get_queryset(self):
         return super().get_queryset().filter(product__category__is_active=True, product__is_active=True, is_active=True)
-
 
 
 class ProductCategory(models.Model):
@@ -107,7 +111,7 @@ class Product(models.Model):
     description = models.TextField(verbose_name=_('Description'))
     datetime_created = models.DateTimeField(auto_now_add=True, verbose_name=_('Datetime created'))
     datetime_modified = models.DateTimeField(auto_now=True, verbose_name=_('Datetime modified'))
-    score = models.PositiveSmallIntegerField(default=0, verbose_name=_('Score'), editable=False)
+    score = models.FloatField(verbose_name=_('Score'), editable=False, default=0)
     category = models.ForeignKey(
         ProductCategory,
         on_delete=models.PROTECT,
@@ -131,6 +135,7 @@ class ProductVariant(models.Model):
     retail_price_dollar = models.DecimalField(max_digits=7, decimal_places=2, verbose_name=_('Retail price dollar'))
     store_price_toman = models.PositiveIntegerField(verbose_name=_('Store price toman'))
     store_price_dollar = models.DecimalField(max_digits=7, decimal_places=2, verbose_name=_('Store price dollar'))
+    thumbnail_image = models.ImageField(upload_to='products/', verbose_name=_('Thumbnail image'))
     is_digital = models.BooleanField(default=False, verbose_name=_('Is digital'), help_text=_('Software and ..'))
     weight = models.FloatField(verbose_name=_('Weight'), help_text=_('Enter in Kilos'))
     datetime_created = models.DateTimeField(auto_now_add=True, verbose_name=_('Datetime created'))
@@ -169,11 +174,26 @@ class ProductVariant(models.Model):
     objects = models.Manager()
     active_manager = ActiveProductVariantManager()
 
+    class Meta:
+        unique_together = (('product', 'color'),)
+
     def __str__(self):
         return f'{self.product.name}-{self.sku}'
 
     def get_absolute_url(self):
         return reverse('products:product-variant-detail', args=(self.sku, self.product.slug,))
+
+    def get_random_related_variants(self):
+        related_product__product_variants_ids = (
+            self.__class__.active_manager.filter(product__category_id=self.product.category_id, is_default=True)
+            .exclude(product_id=self.product_id)
+        )
+        try:
+            chosen_ids = random.sample(list(related_product__product_variants_ids), 8)
+        except ValueError:
+            chosen_ids = related_product__product_variants_ids
+
+        return self.__class__.objects.filter(id__in=chosen_ids)
 
 
 class ProductImage(models.Model):

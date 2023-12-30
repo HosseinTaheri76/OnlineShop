@@ -3,6 +3,7 @@ from django.contrib import admin
 from modeltranslation import admin as trans_admin
 
 from . import models
+from .forms import ProductAdminForm
 
 
 class ProductImageInline(trans_admin.TranslationTabularInline):
@@ -36,7 +37,7 @@ class ProductVariantAdmin(admin.ModelAdmin):
 
 @admin.register(models.Product)
 class ProductAdmin(trans_admin.TranslationAdmin):
-    pass
+    form = ProductAdminForm
 
 
 @admin.register(models.ProductAttribute)

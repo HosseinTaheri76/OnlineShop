@@ -5,12 +5,11 @@
     <link rel="stylesheet" href="{% static 'js/plugin/tagify/tagify.css' %}">
 {% endblock %}
 {% block content %}
-    <!-- start product meta -->
-    {% include 'products/components/product-meta/_product-meta.html' %}
-    <!-- end product meta -->
-    <!-- start product desc -->
-    {% include 'products/components/product-description/_product-description.html' %}
-    <!-- end product desc -->
+    {% include 'products/components/_product-meta.html' %}
+
+    {% include 'products/components/_product-description.html' %}
+
+    {% include 'products/components/_product-related-products.html' %}
 {% endblock %}
 {% block modals %}
     <!-- chart modal -->
@@ -135,5 +134,81 @@
                 window.location.href = $(this).data('url');
             });
         });
+    </script>
+    <script>
+        let scoreInputClone, prosInputClone, consInputClone, formTitleClone, helpTextClone;
+
+        function buildReplyForm(reply_to_id, reply_to_name) {
+
+            let formTitle = $('.comment-form h6:first');
+            if (formTitleClone === undefined) {
+                formTitleClone = formTitle.clone()
+            }
+            formTitle.remove();
+
+            let helpText = $('.comment-form p:first');
+            if (helpTextClone === undefined) {
+                helpTextClone = helpText.clone();
+            }
+            helpText.remove();
+
+            let scoreInput = $('#comment-score-input');
+            if (scoreInputClone === undefined) {
+                scoreInputClone = scoreInput.clone();
+            }
+            scoreInput.remove();
+
+            let prosInput = $('#comment-pros-input');
+            if (prosInputClone === undefined) {
+                prosInputClone = prosInput.clone();
+            }
+            prosInput.remove();
+
+            let consInput = $('#comment-cons-input');
+            if (consInputClone === undefined) {
+                consInputClone = consInput.clone();
+            }
+            consInput.remove();
+
+            const reply_to = $('#comment-parent-input');
+            if (reply_to.length > 0) {
+                reply_to.val(reply_to_id);
+            } else {
+                let element = $(`<input type="hidden" name="parent_id" value="${reply_to_id}" id="comment-parent-input">`);
+                $('#comment-form').prepend(element);
+            }
+
+            const reply_to_element = $('#reply-to-element');
+            if (reply_to_element.length > 0) {
+                reply_to_element.find('span:first').text(reply_to_name);
+            } else {
+                let element = `
+                    <div id="reply-to-element" class="alert w-25 d-flex justify-content-between mb-4" style="background-color: var(--main-color-one)">
+                        <span class="font-16 text-white">${reply_to_name}</span>
+                        <button type="button" class="btn-close btn-close-white"></button>
+                    </div>`;
+                $('.comment-form').prepend($(element));
+                $('#reply-to-element  button').on('click', recoverCommentForm);
+
+            }
+        }
+
+        function recoverCommentForm() {
+            $('#reply-to-element').remove();
+            $('#comment-parent-input').remove();
+            $('#comment-save-info-input').after(scoreInputClone);
+            $('#comment-body-input').after(prosInputClone);
+            $('#comment-pros-input').after(consInputClone);
+            const comment_form_div = $('.comment-form');
+            comment_form_div.prepend(helpTextClone);
+            comment_form_div.prepend(formTitleClone);
+        }
+
+        $('.reply-btn').on('click', e => {
+            buildReplyForm($(e.target).data('reply-to-id'), $(e.target).data('reply-to-name'));
+            $('html, body').animate({
+                scrollTop: $('.product-desc-tab').offset().top
+            }, 0);
+        })
     </script>
 {% endblock %}
