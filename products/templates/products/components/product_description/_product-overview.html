@@ -1,0 +1,18 @@
+{% load i18n %}
+<div class="{% if active_tab == 'review' %}active show {% endif %}tab-pane fade product-desc-less-contents"
+     id="productDescLess-pane">
+    <div class="product-desc-content">
+        <input type="checkbox" class="read-more-state" id="readMore3"/>
+        <div class="read-more-wrap">
+            <!-- todo: fix read more -->
+            {% with description=product_variant.product.description %}
+                <h6 class="font-22 mb-2 title-font">{% trans 'Product review' %}</h6>
+                {{ description|truncatewords_html:100|safe }}
+                <div class="read-more-target">
+                    {{ description|safe }}
+                </div>
+            {% endwith %}
+        </div>
+        <label for="readMore3" class="read-more-trigger"></label>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+{% load i18n %}
+<div class="product-meta-color bottom-border my-4">
+    <h5 class="font-16">
+        {% trans 'Select product color' %}
+    </h5>
+    <div class="product-meta-color-items">
+        {% for variant in product_variant.product.variants.all %}
+
+            <input type="radio" class="btn-check" name="options" id="{{ variant.sku }}"
+                   {% if product_variant.id == variant.id %}checked{% endif %}
+                   autocomplete="off" data-url="{{ variant.get_absolute_url }}">
+
+            <label class="btn" for="{{ variant.sku }}">
+                <span style="background-color: {{ variant.color.color }};"></span>
+                {{ variant.color.name }}
+            </label>
+
+        {% endfor %}
+    </div>
+</div>

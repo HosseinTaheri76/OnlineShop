@@ -1,0 +1,87 @@
+{% load i18n thumbnail %}
+{% load humanize %}
+{% get_current_language as language %}
+<div class="swiper-slide">
+    <div class="product-box">
+        <a href="{{ related_variant.get_absolute_url }}">
+            <div class="product-box-image">
+                {% thumbnail related_variant.thumbnail_image "800x800" crop='center' as image %}
+                    <img src="{{ image.url }}" alt="{{ related_variant.product.slug }}">
+                {% endthumbnail %}
+            </div>
+            <div class="product-box-title">
+                <h5 class="text-overflow-2">
+                    {{ related_variant.product.name }}
+                </h5>
+            </div>
+            <div class="product-box-price">
+                {% if related_variant.in_stock %}
+                    {% if language == 'fa' %}
+                        {% if related_variant.discount_percent > 0 %}
+                            <div class="product-box-price-discount">
+                                <span class="d-block badge main-color-one-bg text-white font-14 rounded-pill">{{ related_variant.discount_percent }}%</span>
+                                <del>{{ related_variant.store_price_toman|intcomma:False }}</del>
+                            </div>
+                            <div class="product-box-price-price">
+                                <h5 class="title-font main-color-green-color h2 mb-0">{{ related_variant.get_price_toman|intcomma:False }}</h5>
+                                <p class="mb-0 text-muted">تومان</p>
+                            </div>
+                        {% else %}
+                            <div class="product-box-price-price">
+                                <h5 class="title-font main-color-green-color h2 mb-0">{{ related_variant.store_price_toman|intcomma:False }}</h5>
+                                <p class="mb-0 text-muted">تومان</p>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        {% if related_variant.discount_percent > 0 %}
+                            <div class="product-box-price-discount">
+                                <span class="d-block badge main-color-one-bg text-white font-14 rounded-pill">{{ related_variant.discount_percent }}%</span>
+                                <del>{{ related_variant.store_price_dollar|intcomma:False }}</del>
+                            </div>
+                            <div class="product-box-price-price">
+                                <h5 class="title-font main-color-green-color h2 mb-0">{{ related_variant.get_price_dollar|intcomma:False }}</h5>
+                                <p class="mb-0 text-muted">$</p>
+                            </div>
+                        {% else %}
+                            <div class="product-box-price-price">
+                                <h5 class="title-font main-color-green-color h2 mb-0">{{ related_variant.store_price_dollar|intcomma:False }}</h5>
+                                <p class="mb-0 text-muted">$</p>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    <div class="product-box-price-price">
+                        <span class="badge text-bg-danger font-15 p-2">{% trans 'Out of stock' %}</span>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="product-box-hover">
+                <nav class="navbar navbar-expand justify-content-center">
+                    <ul class="navbar-nav align-items-center">
+                        <li class="nav-item"><a href="{{ related_variant.get_absolute_url }}"
+                                                class="nav-item product-box-hover-item me-3">{% trans 'View product' %}</a>
+                        </li>
+                        {% if related_variant.in_stock %}
+                            <li class="nav-item"><a href=""
+                                                    class="nav-item product-box-hover-item product-box-hover-item-btn me-1"
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-placement="top"
+                                                    data-bs-title="{% trans 'Add to cart' %}"><i
+                                    class="bi bi-basket"></i>
+                            </a></li>
+                        {% endif %}
+
+                        <li class="nav-item"><a href=""
+                                                class="nav-item product-box-hover-item product-box-hover-item-btn"
+                                                data-bs-toggle="tooltip"
+                                                data-bs-placement="top"
+                                                data-bs-title="{% trans 'Add to favorites' %}"><i
+                                class="bi bi-heart"></i>
+                        </a></li>
+
+                    </ul>
+                </nav>
+            </div>
+        </a>
+    </div>
+</div>

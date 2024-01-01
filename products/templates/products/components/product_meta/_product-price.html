@@ -1,0 +1,50 @@
+{% load i18n %}
+{% load humanize %}
+{% get_current_language as language %}
+<div class="product-meta-action mt-4 bottom-border">
+    <div class="row align-items-center gy-3">
+        <div class="col-sm-6">
+            <div class="d-flex align-items-center justify-content-sm-start justify-content-center">
+                    {% if language == 'fa' %}
+                        {% if product_variant.discount_percent > 0 %}
+                            <p class="mb-0 old-price font-22 text-muted-two text-decoration-line-through me-3">
+                                {{ product_variant.store_price_toman|intcomma:False }}
+                            </p>
+                            <h6 class="font-30 title-font new-price main-color-one-color">
+                                {{ product_variant.get_price_toman|intcomma:False }}
+                                <span class="main-color-one-color mx-2">تومان</span>
+                            </h6>
+                        {% else %}
+                            <h6 class="font-30 title-font new-price main-color-one-color">
+                                {{ product_variant.store_price_toman|intcomma:False }}
+                                <span class="main-color-one-color mx-2">تومان</span>
+                            </h6>
+                        {% endif %}
+                    {% else %}
+                        {% if product_variant.discount_percent > 0 %}
+                            <p class="mb-0 old-price font-22 text-muted-two text-decoration-line-through me-3">
+                                {{ product_variant.store_price_dollar|intcomma:False }}
+                            </p>
+                            <h6 class="font-30 title-font new-price main-color-one-color">
+                                {{ product_variant.get_price_dollar|intcomma:False }} $
+                            </h6>
+                        {% else %}
+                            <h6 class="font-30 title-font new-price main-color-one-color">
+                                {{ product_variant.store_price_dollar|intcomma:False }} $
+                            </h6>
+                        {% endif %}
+                    {% endif %}
+            </div>
+        </div>
+        <div class="col-sm-6 text-center">
+            <div class="counter">
+                <input type="text" name="count" class="counter" value="1">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="product-meta-add-to-cart mt-4">
+    <a href="" class="btn product-meta-add-to-cart-btn main-color-one-bg rounded-pill">
+        {% trans 'Add to cart' %}
+    </a>
+</div>

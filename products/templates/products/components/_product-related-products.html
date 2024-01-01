@@ -1,3 +1,4 @@
+{% load thumbnail %}
 {% with related_variants=product_variant.get_random_related_variants %}
     {% if related_variants %}
         <div class="product-boxs site-slider py-30">
@@ -34,68 +35,18 @@
 
                 <div class="slider-parent">
                     <div class="swiper" id="product-slider">
-
                         <div class="swiper-wrapper ">
-                            {% for variant in related_variants %}
-                              <div class="swiper-slide">
-                                <div class="product-box">
-                                    <a href="">
-                                        <div class="product-box-image">
-                                            <img src="{{ variant.thumbnail_image.url }}" alt="">
-                                        </div>
-                                        <div class="product-box-title">
-                                            <h5 class="text-overflow-2">
-                                                {{ variant.product.name }}
-                                            </h5>
-                                        </div>
-                                        <div class="product-box-price">
-                                            <div class="product-box-price-discount">
-                                                <span class="d-block badge main-color-one-bg text-white font-14 rounded-pill">25%</span>
-                                                <del>2,500,000</del>
-                                            </div>
-                                            <div class="product-box-price-price">
-                                                <h5 class="title-font main-color-green-color h2 mb-0">799,000</h5>
-                                                <p class="mb-0 text-muted">تومان</p>
-                                            </div>
-                                        </div>
-                                        <div class="product-box-hover">
-                                            <nav class="navbar navbar-expand justify-content-center">
-                                                <ul class="navbar-nav align-items-center">
-                                                    <li class="nav-item"><a href=""
-                                                                            class="nav-item product-box-hover-item me-3">مشاهده
-                                                        محصول</a></li>
-                                                    <li class="nav-item"><a href=""
-                                                                            class="nav-item product-box-hover-item product-box-hover-item-btn me-1"
-                                                                            data-bs-toggle="tooltip"
-                                                                            data-bs-placement="top"
-                                                                            data-bs-title="افزودن به سبد خرید"><i
-                                                            class="bi bi-basket"></i></a></li>
-                                                    <li class="nav-item"><a href=""
-                                                                            class="nav-item product-box-hover-item product-box-hover-item-btn"
-                                                                            data-bs-toggle="tooltip"
-                                                                            data-bs-placement="top"
-                                                                            data-bs-title="افزودن به علاقه ها"><i
-                                                            class="bi bi-heart"></i></a></li>
-                                                </ul>
-                                            </nav>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
+                            {% for related_variant in related_variants %}
+                                {% include 'products/components/related_products/_slider-item.html' with related_variant=related_variant %}
                             {% endfor %}
-
                         </div>
-
                         <div class="swiper-button-next"></div>
                         <div class="swiper-button-prev"></div>
-
                     </div>
                 </div>
-
                 <div class="text-center">
                     <button class="amazing-offer-btn" data-scroll-to="#banners"></button>
                 </div>
-
             </div>
         </div>
     {% endif %}

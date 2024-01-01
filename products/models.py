@@ -1,11 +1,14 @@
 import random
-from random import choices
+from decimal import Decimal
 
 from django.db import models
+from django.db.models.functions import Coalesce
+from django.db.models import Case, When, Value, OuterRef, Subquery
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _, gettext
-from django.db.models import Case, When, Value, ImageField, F, Subquery, OuterRef, ImageField
-from django.db.models.functions import Concat
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.utils import timezone
+from django.db import transaction
 
 from colorfield.fields import ColorField
 
@@ -25,6 +28,32 @@ class ActiveProductVariantManager(models.Manager):
 
     def get_queryset(self):
         return super().get_queryset().filter(product__category__is_active=True, product__is_active=True, is_active=True)
+
+    def get_variants_list(self):
+        """Return a query set of product variants with product title and price info annotated."""
+        discount_percent_subquery = (
+            ProductPromotion.active_manager.filter(product_variants__id=OuterRef('id'))
+            .values_list('discount_percent', flat=True)[:1]
+        )
+
+        return (
+            self.select_related('product', 'product__category', 'stock')
+            .annotate(
+                in_stock=Case(
+                    When(stock__units__gt=0, then=Value(True)),
+                    default=Value(False),
+                    output_field=models.BooleanField()
+                ),
+                discount_percent=Coalesce(Subquery(discount_percent_subquery), Value(0))
+            )
+        )
+
+
+class ActiveProductPromotionManager(models.Manager):
+
+    def get_queryset(self):
+        now = timezone.now()
+        return super().get_queryset().filter(datetime_start__lt=now, datetime_end__gt=now)
 
 
 class ProductCategory(models.Model):
@@ -184,8 +213,9 @@ class ProductVariant(models.Model):
         return reverse('products:product-variant-detail', args=(self.sku, self.product.slug,))
 
     def get_random_related_variants(self):
+        """Method for displaying related products (their default variant) in product detail page"""
         related_product__product_variants_ids = (
-            self.__class__.active_manager.filter(product__category_id=self.product.category_id, is_default=True)
+            ProductVariant.active_manager.filter(product__category_id=self.product.category_id, is_default=True)
             .exclude(product_id=self.product_id)
         )
         try:
@@ -193,7 +223,29 @@ class ProductVariant(models.Model):
         except ValueError:
             chosen_ids = related_product__product_variants_ids
 
-        return self.__class__.objects.filter(id__in=chosen_ids)
+        return ProductVariant.active_manager.get_variants_list().filter(id__in=chosen_ids)
+
+    def get_price_toman(self):
+        """This method is intended to be called on objects of a queryset with annotated discount_percent"""
+        return int(self.store_price_toman * (1 - self.discount_percent / 100))
+
+    def get_price_dollar(self):
+        """This method is intended to be called on objects of a queryset with annotated discount_percent"""
+        return round(self.store_price_dollar * Decimal(1 - self.discount_percent / 100), 2)
+
+    def replace_default_variant(self):
+        """When setting is_default to True checks if there is already default variant for that product, if was it will
+           replace it.
+        """
+        db_value = self.__class__.objects.only('is_default').get(pk=self.pk).is_default
+        memory_value = self.is_default
+        if (db_value != memory_value) and memory_value:
+            self.product.variants.exclude(pk=self.pk).filter(is_default=True).update(is_default=False)
+
+    def save(self, *args, **kwargs):
+        with transaction.atomic():
+            self.replace_default_variant()
+            super().save(*args, **kwargs)
 
 
 class ProductImage(models.Model):
@@ -205,7 +257,6 @@ class ProductImage(models.Model):
         verbose_name=_('Product variant')
     )
     image = models.ImageField(upload_to='products/', verbose_name=_('Image'))
-    is_default = models.BooleanField(default=False, verbose_name=_('Is default image'))
     alt_text = models.CharField(max_length=128, verbose_name=_('alt text'))  # auto generate
 
     def __str__(self):
@@ -270,3 +321,15 @@ class Stock(models.Model):
 
     def __str__(self):
         return gettext('%(units)s remaining - %(sku)s') % {'units': self.units, 'sku': self.product_variant.sku}
+
+
+class ProductPromotion(models.Model):
+    discount_percent = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(100)], verbose_name=_('Discount percent')
+    )
+    product_variants = models.ManyToManyField(ProductVariant, related_name='promotions')
+    datetime_start = models.DateTimeField(verbose_name=_('Start at'))
+    datetime_end = models.DateTimeField(verbose_name=_('End at'))
+
+    active_manager = ActiveProductPromotionManager()
+    objects = models.Manager()

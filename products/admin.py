@@ -3,7 +3,7 @@ from django.contrib import admin
 from modeltranslation import admin as trans_admin
 
 from . import models
-from .forms import ProductAdminForm
+from .forms import ProductAdminForm, ProductPromotionAdminForm
 
 
 class ProductImageInline(trans_admin.TranslationTabularInline):
@@ -63,3 +63,9 @@ class BrandAdmin(trans_admin.TranslationAdmin):
 @admin.register(models.Color)
 class ColorAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(models.ProductPromotion)
+class ProductPromotionAdmin(admin.ModelAdmin):
+    form = ProductPromotionAdminForm
+
