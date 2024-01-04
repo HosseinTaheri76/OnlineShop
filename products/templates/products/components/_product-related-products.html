@@ -1,4 +1,4 @@
-{% load thumbnail %}
+{% load thumbnail i18n %}
 {% with related_variants=product_variant.get_random_related_variants %}
     {% if related_variants %}
         <div class="product-boxs site-slider py-30">
@@ -8,28 +8,32 @@
                     <div class="row">
                         <div class="col-sm-8">
                             <div class="slider-title-desc">
-                                <div class="slider-title-icon">
-                                    <div class="slider-title-icon-parent">
-                                        <div>
-                                            <span><i class="bi bi-caret-right-fill"></i></span>
-                                            <h6>تخفیفات</h6>
+                                {% if promotions_available %}
+                                    <div class="slider-title-icon">
+                                        <div class="slider-title-icon-parent">
+                                            <div>
+                                                <span><i class="bi bi-caret-right-fill"></i></span>
+                                                <h6>{% trans 'Discounted products' %}</h6>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                {% endif %}
                                 <div class="slider-title-title">
-                                    <h2 class="h1">محصولات <span class="main-color-one-color title-font">مشابه</span>
+                                    <h2 class="h1">{% trans 'products' %}<span class="main-color-one-color title-font">{% trans 'Related' %}</span>
                                     </h2>
-                                    <p class="mb-0 mt-2 h5 text-muted">محصولات مشابه با این محصول را در پایین میتوانید
-                                        مشاهده کنید</p>
+                                    <p class="mb-0 mt-2 h5 text-muted">
+                                        {% trans 'You can see products related with this product bellow' %}
+                                    </p>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-4">
-                            <div class="slider-title-link">
-                                <a href="" class="main-color-one-color font-16"> مشاهده همه <i
-                                        class="bi bi-caret-left-fill"></i></a>
+                        {% if promotions_available %}
+                            <div class="col-sm-4">
+                                <div class="slider-title-link">
+                                    <a href="" class="main-color-one-color font-16">{% trans 'View all' %}<i class="bi bi-caret-left-fill"></i></a>
+                                </div>
                             </div>
-                        </div>
+                        {% endif %}
                     </div>
                 </div>
 

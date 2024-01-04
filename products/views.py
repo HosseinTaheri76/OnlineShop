@@ -4,6 +4,7 @@ from django.views.generic import DetailView
 
 from comments.views import ProductCommentPartial
 from .queries import product_detail_info
+from .models import ProductPromotion
 
 
 class ProductVariantDetailView(DetailView):
@@ -28,6 +29,11 @@ class ProductVariantDetailView(DetailView):
                 active_tab=self.get_active_tab(comments_partial_response)
             )
         )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['promotions_available'] = ProductPromotion.active_manager.exists()
+        return context
 
     def post(self, request, *args, **kwargs):
         return self.get(request, *args, **kwargs)

@@ -12,6 +12,8 @@ from django.db import transaction
 
 from colorfield.fields import ColorField
 
+from config.utils.i18n.datetime import translate_datetime, format_timedelta
+
 
 class ActiveCategoryManager(models.Manager):
     def get_queryset(self):
@@ -53,7 +55,7 @@ class ActiveProductPromotionManager(models.Manager):
 
     def get_queryset(self):
         now = timezone.now()
-        return super().get_queryset().filter(datetime_start__lt=now, datetime_end__gt=now)
+        return super().get_queryset().filter(datetime_start__lt=now, datetime_end__gt=now, active=True)
 
 
 class ProductCategory(models.Model):
@@ -81,6 +83,10 @@ class Brand(models.Model):
     """Brand for products"""
     name = models.CharField(max_length=128, unique=True, verbose_name=_('Name'))
 
+    class Meta:
+        verbose_name = _('Brand')
+        verbose_name_plural = _('Brands')
+
     def __str__(self):
         return self.name
 
@@ -90,6 +96,10 @@ class Color(models.Model):
     name = models.CharField(max_length=64, unique=True, verbose_name=_('Name'))
     color = ColorField(format='hexa', unique=True, verbose_name=_('Color'))
 
+    class Meta:
+        verbose_name = _('Color')
+        verbose_name_plural = _('Colors')
+
     def __str__(self):
         return self.name
 
@@ -98,6 +108,10 @@ class ProductAttribute(models.Model):
     """Store attributes for products like: ram size, screen resolution ..."""
     name = models.CharField(max_length=255, unique=True, verbose_name=_('Name'))
     description = models.TextField(max_length=500, blank=True, verbose_name=_('Short description'))
+
+    class Meta:
+        verbose_name = _('Product Attribute')
+        verbose_name_plural = _('Product Attributes')
 
     def __str__(self):
         return self.name
@@ -114,6 +128,10 @@ class ProductType(models.Model):
         verbose_name=_('Attributes')
     )
 
+    class Meta:
+        verbose_name = _('Product type')
+        verbose_name_plural = _('Product types')
+
     def __str__(self):
         return self.name
 
@@ -127,6 +145,10 @@ class ProductAttributeValue(models.Model):
         verbose_name=_('Attribute')
     )
     attribute_value = models.CharField(max_length=255, verbose_name=_('Attribute value'))
+
+    class Meta:
+        verbose_name = _('Product Attribute-Value')
+        verbose_name_plural = _('Product Attributes-Values')
 
     def __str__(self):
         return f'{self.product_attribute.name}: {self.attribute_value}'
@@ -151,6 +173,10 @@ class Product(models.Model):
     objects = models.Manager()
     active_manager = ActiveProductManager()
 
+    class Meta:
+        verbose_name = _('Product')
+        verbose_name_plural = _('Products')
+
     def __str__(self):
         return self.name
 
@@ -166,9 +192,13 @@ class ProductVariant(models.Model):
     store_price_dollar = models.DecimalField(max_digits=7, decimal_places=2, verbose_name=_('Store price dollar'))
     thumbnail_image = models.ImageField(upload_to='products/', verbose_name=_('Thumbnail image'))
     is_digital = models.BooleanField(default=False, verbose_name=_('Is digital'), help_text=_('Software and ..'))
-    weight = models.FloatField(verbose_name=_('Weight'), help_text=_('Enter in Kilos'))
     datetime_created = models.DateTimeField(auto_now_add=True, verbose_name=_('Datetime created'))
     datetime_modified = models.DateTimeField(auto_now=True, verbose_name=_('Datetime modified'))
+    weight = models.FloatField(
+        validators=[MinValueValidator(0, _('Weight cannot be negative.'))],
+        verbose_name=_('Weight'),
+        help_text=_('Enter in Kilos')
+    )
     attribute_values = models.ManyToManyField(
         ProductAttributeValue,
         related_name='product_variants',
@@ -205,6 +235,8 @@ class ProductVariant(models.Model):
 
     class Meta:
         unique_together = (('product', 'color'),)
+        verbose_name = _('Product Variant')
+        verbose_name_plural = _('Product Variants')
 
     def __str__(self):
         return f'{self.product.name}-{self.sku}'
@@ -259,6 +291,10 @@ class ProductImage(models.Model):
     image = models.ImageField(upload_to='products/', verbose_name=_('Image'))
     alt_text = models.CharField(max_length=128, verbose_name=_('alt text'))  # auto generate
 
+    class Meta:
+        verbose_name = _('Product image')
+        verbose_name_plural = _('Product images')
+
     def __str__(self):
         return self.alt_text
 
@@ -281,6 +317,8 @@ class ProductAttributeValues(models.Model):
 
     class Meta:
         unique_together = (('attribute_value', 'product_variant'),)
+        verbose_name = _('Product-Attribute-Value')
+        verbose_name_plural = _('Products-Attributes-Values')
 
     def __str__(self):
         return str(self.attribute_value)
@@ -304,6 +342,8 @@ class ProductTypeAttribute(models.Model):
 
     class Meta:
         unique_together = (('product_attribute', 'product_type'),)
+        verbose_name = _('Product type - Attribute')
+        verbose_name_plural = _('Product types - Attributes')
 
     def __str__(self):
         return str(self.product_attribute)
@@ -319,6 +359,10 @@ class Stock(models.Model):
     units_sold = models.PositiveIntegerField(default=0, verbose_name=_('Units Sold'))
     datetime_checked = models.DateTimeField(null=True, blank=True, verbose_name=_('Datetime checked'))
 
+    class Meta:
+        verbose_name = _('Product variant stock')
+        verbose_name_plural = _('Product variants stock')
+
     def __str__(self):
         return gettext('%(units)s remaining - %(sku)s') % {'units': self.units, 'sku': self.product_variant.sku}
 
@@ -330,6 +374,26 @@ class ProductPromotion(models.Model):
     product_variants = models.ManyToManyField(ProductVariant, related_name='promotions')
     datetime_start = models.DateTimeField(verbose_name=_('Start at'))
     datetime_end = models.DateTimeField(verbose_name=_('End at'))
+    active = models.BooleanField(default=True, verbose_name=_('Active'))
 
     active_manager = ActiveProductPromotionManager()
     objects = models.Manager()
+
+    class Meta:
+        verbose_name = _('Promotion')
+        verbose_name_plural = _('Promotions')
+        default_manager_name = 'objects'
+
+    def __str__(self):
+        return _('%(discount_percent)s%% discount from %(datetime_start)s To %(datetime_end)s') % {
+            'discount_percent': self.discount_percent,
+            'datetime_start': translate_datetime(self.datetime_start),
+            'datetime_end': translate_datetime(self.datetime_end)
+        }
+
+    def is_active(self):
+        return (self.datetime_start <= timezone.now() <= self.datetime_end) and self.active
+
+    def remaining_time(self):
+        now = timezone.now()
+        return format_timedelta(self.datetime_end - now) if self.datetime_end >= now else 0

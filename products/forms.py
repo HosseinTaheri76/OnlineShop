@@ -48,3 +48,13 @@ class ProductPromotionAdminForm(forms.ModelForm):
             raise forms.ValidationError(_('End datetime must be greater than start datetime'), 'start-gt-end')
         return cleaned_data
 
+
+class ProductVariantAdminForm(forms.ModelForm):
+    class Meta:
+        model = models.ProductVariant
+        fields = '__all__'
+        widgets = {
+            'retail_price_toman': forms.NumberInput(attrs={'width': '300px'}),
+            'store_price_toman': forms.NumberInput(attrs={'width': '300px'}),
+        }
+

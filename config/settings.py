@@ -241,3 +241,8 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
+# date and time format
+
+DEFAULT_DATETIME_FORMAT = '%Y/%-m/%-d - %H:%M:%S'
+DEFAULT_TIME_FORMAT = '%H:%M:%S'
+
